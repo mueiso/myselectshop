@@ -2,6 +2,7 @@ package com.sparta.myselectshop.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sparta.myselectshop.dto.ProductMypriceRequestDto;
@@ -48,7 +51,9 @@ public class ProductController {
 	 * @return 희망가격이 수정된 상품 정보를 담은 ProductResponseDto
 	 */
 	@PutMapping("/products/{id}")
-	public ProductResponseDto updateProduct(@PathVariable("id") Long id, @RequestBody ProductMypriceRequestDto requestDto) {
+	public ProductResponseDto updateProduct(
+		@PathVariable("id") Long id,
+		@RequestBody ProductMypriceRequestDto requestDto) {
 
 		return productService.updateProduct(id, requestDto);
 	}
@@ -59,11 +64,21 @@ public class ProductController {
 	 * @return 등록된 상품들의 리스트 (ProductResponseDtoList)
 	 */
 	@GetMapping("/products")
-	public List<ProductResponseDto> getProducts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+	public Page<ProductResponseDto> getProducts(
+		@RequestParam("page") int page,
+		@RequestParam("size") int size,
+		@RequestParam("sortBy") String sortBy,
+		@RequestParam("isAsc") boolean isAsc,
+		@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-		return productService.getProducts(userDetails.getUser());
+		return productService.getProducts(userDetails.getUser(), page-1, size, sortBy, isAsc);
 	}
 
+	/**
+	 * [ADMIN 계정 전용 관심상품 전체 조회]
+	 *
+	 * @return 모든 계정에 등록된 관심상품 전체 리스트 (ProductResponseDtoList)
+	 */
 	@GetMapping("/admin/products")
 	public List<ProductResponseDto> getAllProducts() {
 
