@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import com.sparta.myselectshop.dto.SignupRequestDto;
 import com.sparta.myselectshop.dto.UserInfoDto;
 import com.sparta.myselectshop.entity.UserRoleEnum;
 import com.sparta.myselectshop.security.UserDetailsImpl;
+import com.sparta.myselectshop.service.FolderService;
 import com.sparta.myselectshop.service.UserService;
 
 import jakarta.validation.Valid;
@@ -28,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
 
 	private final UserService userService;
+	private final FolderService folderService;
 
 	@GetMapping("/user/login-page")
 	public String loginPage() {
@@ -42,7 +45,9 @@ public class UserController {
 	}
 
 	@PostMapping("/user/signup")
-	public String signup(@Valid SignupRequestDto requestDto, BindingResult bindingResult) {
+	public String signup(
+		@Valid SignupRequestDto requestDto,
+		BindingResult bindingResult) {
 
 		// Validation 예외처리
 		List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -61,13 +66,24 @@ public class UserController {
 	// 회원 관련 정보 받기
 	@GetMapping("/user-info")
 	@ResponseBody
-	public UserInfoDto getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+	public UserInfoDto getUserInfo(
+		@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
 		String username = userDetails.getUser().getUsername();
 		UserRoleEnum role = userDetails.getUser().getRole();
 		boolean isAdmin = (role == UserRoleEnum.ADMIN);
 
 		return new UserInfoDto(username, isAdmin);
+	}
+
+	@GetMapping("/user-folder")
+	public String getUserInfo(
+		Model model,
+		@AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+		model.addAttribute("folders", folderService.getFolders(userDetails.getUser()));
+
+		return "index :: #fragment";
 	}
 
 }

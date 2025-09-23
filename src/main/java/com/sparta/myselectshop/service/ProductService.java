@@ -57,6 +57,7 @@ public class ProductService {
 	}
 
 	// 관심상품 리스트 조회
+	@Transactional(readOnly = true)
 	public Page<ProductResponseDto> getProducts(User user, int page, int size, String sortBy, boolean isAsc) {
 
 		Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
