@@ -27,6 +27,7 @@ public class NaverApiService {
 	}
 
 	public List<ItemDto> searchItems(String query) {
+
 		// 요청 URL 만들기
 		URI uri = UriComponentsBuilder
 			.fromUriString("https://openapi.naver.com")
@@ -52,6 +53,7 @@ public class NaverApiService {
 	}
 
 	public List<ItemDto> fromJSONtoItems(String responseEntity) {
+
 		JSONObject jsonObject = new JSONObject(responseEntity);
 		JSONArray items  = jsonObject.getJSONArray("items");
 		List<ItemDto> itemDtoList = new ArrayList<>();
