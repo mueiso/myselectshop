@@ -2,6 +2,7 @@ package com.sparta.myselectshop.controller;
 
 import java.util.List;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sparta.myselectshop.dto.ProductMypriceRequestDto;
 import com.sparta.myselectshop.dto.ProductRequestDto;
 import com.sparta.myselectshop.dto.ProductResponseDto;
+import com.sparta.myselectshop.security.UserDetailsImpl;
 import com.sparta.myselectshop.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
@@ -31,9 +33,11 @@ public class ProductController {
 	 * @return 등록된 상품 정보를 담은 ProductResponseDto
 	 */
 	@PostMapping("/products")
-	public ProductResponseDto createProduct(@RequestBody ProductRequestDto requestDto) {
+	public ProductResponseDto createProduct(
+		@RequestBody ProductRequestDto requestDto,
+		@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-		return productService.createProduct(requestDto);
+		return productService.createProduct(requestDto, userDetails.getUser());
 	}
 
 	/**
@@ -55,9 +59,15 @@ public class ProductController {
 	 * @return 등록된 상품들의 리스트 (ProductResponseDtoList)
 	 */
 	@GetMapping("/products")
-	public List<ProductResponseDto> getProducts() {
+	public List<ProductResponseDto> getProducts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-		return productService.getProducts();
+		return productService.getProducts(userDetails.getUser());
+	}
+
+	@GetMapping("/admin/products")
+	public List<ProductResponseDto> getAllProducts() {
+
+		return productService.getAllProducts();
 	}
 
 }

@@ -10,6 +10,7 @@ import com.sparta.myselectshop.dto.ProductMypriceRequestDto;
 import com.sparta.myselectshop.dto.ProductRequestDto;
 import com.sparta.myselectshop.dto.ProductResponseDto;
 import com.sparta.myselectshop.entity.Product;
+import com.sparta.myselectshop.entity.User;
 import com.sparta.myselectshop.naver.dto.ItemDto;
 import com.sparta.myselectshop.repository.ProductRepository;
 
@@ -24,9 +25,9 @@ public class ProductService {
 	public static final int MIN_MY_PRICE = 100;
 
 	// 관심상품 등록
-	public ProductResponseDto createProduct(ProductRequestDto requestDto) {
+	public ProductResponseDto createProduct(ProductRequestDto requestDto, User user) {
 
-		Product product = productRepository.save(new Product(requestDto));
+		Product product = productRepository.save(new Product(requestDto, user));
 
 		return new ProductResponseDto(product);
 	}
@@ -51,7 +52,20 @@ public class ProductService {
 	}
 
 	// 관심상품 리스트 조회
-	public List<ProductResponseDto> getProducts() {
+	public List<ProductResponseDto> getProducts(User user) {
+
+		List<Product> productList = productRepository.findAllByUser(user);
+		List<ProductResponseDto> responseDtoList = new ArrayList<>();
+
+		for (Product product : productList) {
+			responseDtoList.add(new ProductResponseDto(product));
+		}
+
+		return responseDtoList;
+	}
+
+	// ADMIN 계정용 모든 상품 조회
+	public List<ProductResponseDto> getAllProducts() {
 
 		List<Product> productList = productRepository.findAll();
 		List<ProductResponseDto> responseDtoList = new ArrayList<>();
@@ -68,8 +82,9 @@ public class ProductService {
 
 		Product product = productRepository.findById(id).orElseThrow(() ->
 			new NullPointerException("해당 상품은 존재하지 않습니다.")
-			);
+		);
 
 		product.updateByItemDto(itemDto);
 	}
+
 }
