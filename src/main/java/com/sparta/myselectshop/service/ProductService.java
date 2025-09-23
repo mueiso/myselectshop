@@ -22,7 +22,7 @@ public class ProductService {
 
 	public static final int MIN_MY_PRICE = 100;
 
-	// createProduct
+	// 관심상품 등록
 	public ProductResponseDto createProduct(ProductRequestDto requestDto) {
 
 		Product product = productRepository.save(new Product(requestDto));
@@ -30,7 +30,7 @@ public class ProductService {
 		return new ProductResponseDto(product);
 	}
 
-	// updateProduct
+	// 관심상품 희망 가격 설정
 	@Transactional
 	public ProductResponseDto updateProduct(Long id, ProductMypriceRequestDto requestDto) {
 
@@ -49,7 +49,7 @@ public class ProductService {
 		return new ProductResponseDto(product);
 	}
 
-	// getProduct List
+	// 관심상품 리스트 조회
 	public List<ProductResponseDto> getProducts() {
 
 		List<Product> productList = productRepository.findAll();

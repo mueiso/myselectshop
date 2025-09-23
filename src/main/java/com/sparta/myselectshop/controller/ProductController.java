@@ -24,18 +24,36 @@ public class ProductController {
 
 	private final ProductService productService;
 
+	/**
+	 * [관심상품 등록]
+	 *
+	 * @param requestDto 관심상품 등록 요청 데이터 (상품명, 링크, 이미지, 최저가 등)
+	 * @return 등록된 상품 정보를 담은 ProductResponseDto
+	 */
 	@PostMapping("/products")
 	public ProductResponseDto createProduct(@RequestBody ProductRequestDto requestDto) {
 
 		return productService.createProduct(requestDto);
 	}
 
+	/**
+	 * [관심상품 희망가격 수정]
+	 *
+	 * @param id 수정할 상품의 ID
+	 * @param requestDto 수정할 희망가격을 담은 요청 데이터
+	 * @return 희망가격이 수정된 상품 정보를 담은 ProductResponseDto
+	 */
 	@PutMapping("/products/{id}")
 	public ProductResponseDto updateProduct(@PathVariable("id") Long id, @RequestBody ProductMypriceRequestDto requestDto) {
 
 		return productService.updateProduct(id, requestDto);
 	}
 
+	/**
+	 * [관심상품 전체 조회]
+	 *
+	 * @return 등록된 상품들의 리스트 (ProductResponseDtoList)
+	 */
 	@GetMapping("/products")
 	public List<ProductResponseDto> getProducts() {
 
