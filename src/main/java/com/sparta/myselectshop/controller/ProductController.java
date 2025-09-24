@@ -101,4 +101,17 @@ public class ProductController {
 		productService.addFolder(productId, folderId, userDetails.getUser());
 	}
 
+	// 해당 폴더에 등록이 되어있는 상품들 조회
+	@GetMapping("/folders/{folderId}/products")
+	public Page<ProductResponseDto> getProductsInFolder(
+		@PathVariable Long folderId,
+		@RequestParam("page") int page,
+		@RequestParam("size") int size,
+		@RequestParam("sortBy") String sortBy,
+		@RequestParam("isAsc") boolean isAsc,
+		@AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+		return productService.getProductsInFolder(folderId, page-1, size, sortBy, isAsc, userDetails.getUser());
+	}
+
 }

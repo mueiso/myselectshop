@@ -136,4 +136,21 @@ public class ProductService {
 		productFolderRepository.save(new ProductFolder(product, folder));
 	}
 
+	public Page<ProductResponseDto> getProductsInFolder(Long folderId, int page, int size, String sortBy, boolean isAsc, User user) {
+
+		Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+		Sort sort = Sort.by(direction, sortBy);
+		Pageable pageable = PageRequest.of(page, size,sort);
+
+		Page<Product> productList = productRepository.findAllByUserAndProductFolderList_FolderId(user, folderId, pageable);
+
+		Page<ProductResponseDto> responseDtoList = productList.map(ProductResponseDto::new);
+
+		return responseDtoList;
+	}
+
 }
+
+/* TODO
+ * 중복되는 페이지네이션 메서드로 분리
+ */
