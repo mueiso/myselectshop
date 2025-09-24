@@ -32,18 +32,35 @@ public class UserController {
 	private final UserService userService;
 	private final FolderService folderService;
 
+	/**
+	 * [로그인]
+	 *
+	 * @return 로그인 페이지 (login.html)
+	 */
 	@GetMapping("/user/login-page")
 	public String loginPage() {
 
 		return "login";
 	}
 
+	/**
+	 * [회원가입]
+	 *
+	 * @return 회원가입 페이지 (signup.html)
+	 */
 	@GetMapping("/user/signup")
 	public String signupPage() {
 
 		return "signup";
 	}
 
+	/**
+	 * [회원가입]
+	 *
+	 * @param requestDto 회원가입 필요 정보 (이름, 비밀번호)
+	 * @param bindingResult ADMIN 권한 여부 / ADMIN인 경우 관리자 권한 가진 토큰값
+	 * @return 회원가입 성공 시 로그인 페이지로 리다이렉트 (login.html)
+	 */
 	@PostMapping("/user/signup")
 	public String signup(
 		@Valid SignupRequestDto requestDto,
@@ -63,7 +80,12 @@ public class UserController {
 		return "redirect:/api/user/login-page";
 	}
 
-	// 회원 관련 정보 받기
+	/**
+	 * [회원 관련 정보 받기]
+	 *
+	 * @param userDetails 로그인한 유저의 정보
+	 * @return 로그인한 유저의 정보 (이름, 관리자 권한 여부)
+	 */
 	@GetMapping("/user-info")
 	@ResponseBody
 	public UserInfoDto getUserInfo(
@@ -76,6 +98,13 @@ public class UserController {
 		return new UserInfoDto(username, isAdmin);
 	}
 
+	/**
+	 * [폴더의 회원 관련 정보 받기]
+	 *
+	 * @param model 로그인한 사용자의 폴더 목록을 조회하여 Model에 담음 (model = 뷰에 데이터를 전달하기 위한 객체)
+	 * @param userDetails 로그인한 유저의 정보
+	 * @return index.html에 내 fragment 영역을 반환
+	 */
 	@GetMapping("/user-folder")
 	public String getUserInfo(
 		Model model,

@@ -88,9 +88,9 @@ public class ProductController {
 	/**
 	 * [상품에 폴더 추가]
 	 *
-	 * @param productId
-	 * @param folderId
-	 * @param userDetails
+	 * @param productId 폴더에 추가할 상품 ID
+	 * @param folderId 상품을 추가할 폴더 ID
+	 * @param userDetails 로그인한 유저의 정보
 	 */
 	@PostMapping("/products/{productId}/folder")
 	public void addFolder(

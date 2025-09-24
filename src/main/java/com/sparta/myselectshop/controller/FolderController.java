@@ -23,7 +23,12 @@ public class FolderController {
 
 	private final FolderService folderService;
 
-	// 폴더 추가
+	/**
+	 * [폴더 추가]
+	 *
+	 * @param folderRequestDto 저장할 폴더 데이터 (폴더 이름)
+	 * @param userDetails 로그인한 유저의 정보
+	 */
 	@PostMapping("/folders")
 	public void addFolders(
 		@RequestBody FolderRequestDto folderRequestDto,
@@ -34,7 +39,12 @@ public class FolderController {
 		folderService.addFolders(folderNames, userDetails.getUser());
 	}
 
-	// 회원이 등록한 모든 폴더 조회
+	/**
+	 * [회원이 등록한 모든 폴더 조회]
+	 *
+	 * @param userDetails 로그인한 유저의 정보
+	 * @return 폴더 목록
+	 */
 	@GetMapping("/folders")
 	public List<FolderResponseDto> getFolders(
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
